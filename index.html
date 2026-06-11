@@ -1,0 +1,442 @@
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Truck Tally Office</title>
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="topbar">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search Trailer, Truck, DN, WB Receipt, Date..."
+        >
+
+    </header>
+
+    <aside class="sidebar">
+
+        <div class="sidebar-title">
+            Loads
+        </div>
+
+        <div id="loadList">
+</div>
+
+    </aside>
+
+    <main class="details">
+ <div class="view-tabs">
+
+    <button
+        id="officeTab"
+        class="tab-button active-tab"
+    >
+        Office View
+    </button>
+
+    <button
+        id="clientTab"
+        class="tab-button"
+    >
+        Client View
+    </button>
+
+</div>
+<div class="dashboard-date">
+
+    <label for="reportDate">
+        Report Date
+    </label>
+
+    <input
+        type="date"
+        id="reportDate"
+    >
+
+</div>
+
+<div class="dashboard-bar">
+
+    <div class="kpi-card">
+
+        <div class="kpi-title">
+            Loaded MT
+        </div>
+
+        <div
+            class="kpi-value"
+            id="loadedMT"
+        >
+            260 MT
+        </div>
+
+    </div>
+
+    <div class="kpi-card">
+
+        <div class="kpi-title">
+            Trailers
+        </div>
+
+        <div
+            class="kpi-value"
+            id="trailerCount"
+        >
+            8
+        </div>
+
+    </div>
+
+    <div class="kpi-card">
+
+        <div class="kpi-title">
+            Total MT
+        </div>
+
+        <div
+            class="kpi-value"
+id="totalMT"
+>
+            12,850 MT
+        </div>
+
+    </div>
+
+    <div class="kpi-card">
+
+        <div class="kpi-title">
+            Total Trailers
+        </div>
+
+        <div
+            class="kpi-value"
+            id="totalTrailers"
+        >
+            421
+        </div>
+
+    </div>
+
+</div>
+<div
+    id="clientView"
+    style="display:none;"
+>
+
+    <table class="client-table">
+
+        <thead>
+
+            <tr>
+
+                <th>No</th>
+
+                <th>Trailer No</th>
+
+<th>Truck No</th>
+
+<th>Loading In</th>
+
+<th>Loading Out</th>
+
+<th>Customs Seal</th>
+
+<th>WB Receipt No</th>
+
+<th>Delivery Note No</th>
+
+<th>WB In</th>
+
+<th>WB Out</th>
+
+<th>Tare Weight</th>
+
+<th>Gross Weight</th>
+
+<th>Net Weight</th>
+<th>Photos</th>
+
+<th>PDF</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="clientTableBody">
+
+        </tbody>
+
+    </table>
+
+</div>
+<div id="officeView">
+<div class="load-header">
+
+    <div>
+
+        <h2 id="loadTitle">
+            TR001-090626
+        </h2>
+
+        <div id="loadStatus">
+            🟢 Complete
+        </div>
+
+        <div id="loadSummary">
+            Truck: 7623 • WB: WB7754 • DN: DN4588
+        </div>
+
+    </div>
+
+</div>
+      <form id="loadForm">
+
+    <div class="section-card trailer-card">
+
+    <h3 class="section-title">
+        Trailer Information
+    </h3>
+
+    <div class="form-grid">
+
+        <div class="field-group">
+            <label for="trailerNumber">
+                Trailer Number
+            </label>
+
+            <input id="trailerNumber">
+        </div>
+
+        <div class="field-group">
+            <label for="truckNumber">
+                Truck Number
+            </label>
+
+            <input id="truckNumber">
+        </div>
+
+        <div class="field-group">
+            <label for="customsSeal">
+                Customs Seal
+            </label>
+
+            <input id="customsSeal">
+        </div>
+
+    </div>
+
+</div>
+
+    <div class="section-card loading-card">
+
+    <h3 class="section-title">
+        Loading Information
+    </h3>
+
+    <div class="form-grid">
+
+        <div class="field-group">
+            <label for="loadingTimeIn">
+                Loading Time In
+            </label>
+
+            <input id="loadingTimeIn" type="datetime-local">
+        </div>
+
+        <div class="field-group">
+            <label for="loadingTimeOut">
+                Loading Time Out
+            </label>
+
+            <input id="loadingTimeOut" type="datetime-local">
+        </div>
+
+        <div class="field-group">
+            <label for="wbTimeIn">
+                WB Time In
+            </label>
+
+            <input id="wbTimeIn">
+        </div>
+
+        <div class="field-group">
+            <label for="wbTimeOut">
+                WB Time Out
+            </label>
+
+            <input id="wbTimeOut">
+        </div>
+
+    </div>
+
+</div>
+
+    <div class="section-card documents-card">
+
+<h3 class="section-title">
+    Documents
+</h3>
+
+<div class="form-grid">
+
+    <div class="field-group">
+        <label for="wbReceiptNo">
+            WB Receipt No
+        </label>
+
+        <input id="wbReceiptNo">
+    </div>
+
+    <div class="field-group">
+        <label for="deliveryNoteNo">
+            Delivery Note No
+        </label>
+
+        <input id="deliveryNoteNo">
+    </div>
+
+</div>
+
+</div>
+
+<div class="section-card weight-card">
+
+<h3 class="section-title">
+    Weight Information
+</h3>
+
+<div class="form-grid">
+
+    <div class="field-group">
+        <label for="tareWeight">
+            Tare Weight
+        </label>
+
+        <input id="tareWeight" type="number">
+    </div>
+
+    <div class="field-group">
+        <label for="grossWeight">
+            Gross Weight
+        </label>
+
+        <input id="grossWeight" type="number">
+    </div>
+
+    <div class="field-group">
+        <label for="netWeight">
+            Net Weight
+        </label>
+
+        <input id="netWeight" readonly>
+    </div>
+
+</div>
+
+
+</div>
+
+<div class="section-card">
+
+    <h3 class="section-title">
+        Remarks
+    </h3>
+
+    <textarea
+        id="remarks"
+        rows="6"
+        placeholder="Enter remarks..."
+    ></textarea>
+
+</div>
+
+</form>
+        <div class="action-buttons">
+
+            <button
+    type="button"
+    id="saveBtn"
+>
+    Save
+</button>
+
+            <button
+                type="button"
+                class="primary"
+            >
+                Generate PDF
+            </button>
+
+            <button type="button">
+                Open PDF
+            </button>
+
+            <button type="button">
+                Open Folder
+            </button>
+</div>
+        </div>
+
+    </main>
+
+    <section class="photos">
+
+        <div class="preview">
+
+            <img
+                id="mainPhoto"
+                src="https://via.placeholder.com/600x400?text=Truck+Photo"
+                alt="Preview"
+            >
+
+        </div>
+
+        <div class="thumbnails">
+
+            <div class="photo-thumb">
+                <input type="checkbox" checked>
+                <img src="https://via.placeholder.com/150">
+            </div>
+
+            <div class="photo-thumb">
+                <input type="checkbox" checked>
+                <img src="https://via.placeholder.com/150">
+            </div>
+
+            <div class="photo-thumb">
+                <input type="checkbox">
+                <img src="https://via.placeholder.com/150">
+            </div>
+
+            <div class="photo-thumb">
+                <input type="checkbox">
+                <img src="https://via.placeholder.com/150">
+            </div>
+
+            <div class="photo-thumb">
+                <input type="checkbox">
+                <img src="https://via.placeholder.com/150">
+            </div>
+
+            <div class="photo-thumb">
+                <input type="checkbox">
+                <img src="https://via.placeholder.com/150">
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
