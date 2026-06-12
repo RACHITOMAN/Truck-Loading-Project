@@ -291,8 +291,7 @@ document
         "input",
         calculateNetWeight
     );
-    function saveLoad() {
-
+async function saveLoad() {
     currentLoad.trailerNumber =
         document.getElementById(
             "trailerNumber"
@@ -357,6 +356,58 @@ document
        "truckTallyLoads",
        JSON.stringify(loads)
    );
+   await fetch(
+       "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
+       {
+           method: "POST",
+
+           body: JSON.stringify({
+
+               action: "update",
+
+               loadId:
+                   currentLoad.loadId,
+
+               trailerNumber:
+                   currentLoad.trailerNumber,
+
+               truckNumber:
+                   currentLoad.truckNumber,
+
+               customsSeal:
+                   currentLoad.customsSeal,
+
+               loadingTimeIn:
+                   currentLoad.loadingTimeIn,
+
+               loadingTimeOut:
+                   currentLoad.loadingTimeOut,
+
+               wbReceiptNo:
+                   currentLoad.wbReceiptNo,
+
+               deliveryNoteNo:
+                   currentLoad.deliveryNoteNo,
+
+               wbTimeIn:
+                   currentLoad.wbTimeIn,
+
+               wbTimeOut:
+                   currentLoad.wbTimeOut,
+
+               tareWeight:
+                   currentLoad.tareWeight,
+
+               grossWeight:
+                   currentLoad.grossWeight,
+
+               remarks:
+                   currentLoad.remarks
+
+           })
+
+       }
+);
 
 console.log(currentLoad);
 updateDashboard();
