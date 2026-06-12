@@ -356,8 +356,9 @@ async function saveLoad() {
        "truckTallyLoads",
        JSON.stringify(loads)
    );
-   await fetch(
-       "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
+const response =
+    await fetch(
+		"https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
        {
            method: "POST",
 
@@ -408,6 +409,10 @@ async function saveLoad() {
 
        }
 );
+const result =
+    await response.json();
+
+console.log(result);
 
 console.log(currentLoad);
 updateDashboard();
