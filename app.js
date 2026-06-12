@@ -1,4 +1,3 @@
-
 let loads = JSON.parse(
     localStorage.getItem("truckTallyLoads")
 ) || [
@@ -535,7 +534,7 @@ document
 >
     PDF
 </a>
-</td>             
+</td>
  </tr>
 `;
         }
