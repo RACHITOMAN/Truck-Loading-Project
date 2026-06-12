@@ -1,3 +1,4 @@
+alert("APP JS LOADED");
 let loads = [];
 
 let currentLoad = null;
