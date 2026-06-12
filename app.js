@@ -18,7 +18,7 @@ fetch(
         renderLoadList();
 
         loadData();
-
+updateDashboard();
     }
 );
 
