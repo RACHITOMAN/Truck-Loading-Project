@@ -63,7 +63,29 @@ let loads = JSON.parse(
 
     }
 
+
 ];
+
+fetch(
+    "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec"
+)
+.then(
+    response => response.json()
+)
+.then(
+    data => {
+
+        loads = data;
+
+        currentLoad = loads[0];
+
+        renderLoadList();
+
+        loadData();
+
+    }
+);
+
 let currentLoad = loads[0];
 function selectLoad(index) {
 
