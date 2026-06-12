@@ -459,6 +459,8 @@ document.querySelector(
 
 	    );
 	}
+	renderLoadList();
+loadData();
 
 	function showClientView() {
 
