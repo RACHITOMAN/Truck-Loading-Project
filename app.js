@@ -22,7 +22,7 @@ fetch(
     }
 );
 
-let currentLoad = loads[0];
+
 function selectLoad(index) {
 
     currentLoad = loads[index];
@@ -382,18 +382,20 @@ document
 
 	    document.getElementById(
 	        "officeTab"
+
 	    ).classList.add(
 	        "active-tab"
 	    );
         document.querySelector(".app").style.gridTemplateColumns =
     "300px 1fr 380px";
 
+
 document.querySelector(".app").style.gridTemplateAreas =
     `"topbar topbar topbar"
      "sidebar details photos"`;
 document.querySelector(
     ".sidebar"
-).style.display = "block";
+).style.display = "";
 
 document.querySelector(
     ".photos"
@@ -404,9 +406,19 @@ document.querySelector(
 	        "active-tab"
 
 	    );
+
+        document.querySelector(
+    ".details"
+).style.gridColumn = "";
+
+document.querySelector(
+    ".details"
+).style.gridColumn =
+    "details";
+
+        renderLoadList();
 	}
-	renderLoadList();
-loadData();
+
 
 	function showClientView() {
 
@@ -414,10 +426,10 @@ loadData();
 	        "officeView"
 	    ).style.display = "none";
 
-document.querySelector(
-    ".details"
-).style.gridColumn =
-    "1 / -1";
+// document.querySelector(
+//     ".details"
+// ).style.gridColumn =
+//     "1 / -1";
 	    document.getElementById(
 	        "clientView"
 	    ).style.display = "block";
@@ -447,6 +459,17 @@ document.querySelector(".app").style.gridTemplateAreas =
     `"topbar"
      "details"`;
 
+     console.log(
+    getComputedStyle(
+        document.querySelector(".details")
+    ).gridColumn
+);
+
+console.log(
+    getComputedStyle(
+        document.querySelector(".details")
+    ).gridArea
+);
 	    renderClientTable();
 }
 document
@@ -500,9 +523,19 @@ document
 
     <td>${load.truckNumber || ""}</td>
 
-    <td>${load.loadingTimeIn || ""}</td>
+    <td>${
+    load.loadingTimeIn
+        ? new Date(load.loadingTimeIn)
+            .toLocaleString()
+        : ""
+}</td>
 
-    <td>${load.loadingTimeOut || ""}</td>
+<td>${
+    load.loadingTimeOut
+        ? new Date(load.loadingTimeOut)
+            .toLocaleString()
+        : ""
+}</td>
 
     <td>${load.customsSeal || ""}</td>
 
@@ -510,9 +543,19 @@ document
 
     <td>${load.deliveryNoteNo || ""}</td>
 
-    <td>${load.wbTimeIn || ""}</td>
+<td>${
+    load.wbTimeIn
+        ? new Date(load.wbTimeIn)
+            .toLocaleString()
+        : ""
+}</td>
 
-    <td>${load.wbTimeOut || ""}</td>
+<td>${
+    load.wbTimeOut
+        ? new Date(load.wbTimeOut)
+            .toLocaleString()
+        : ""
+}</td>
 
     <td>${tare}</td>
 
@@ -522,12 +565,12 @@ document
 
 <td>
     <a
-    href="#"
-    class="client-link"
-    onclick="viewPhotos('${load.trailerNumber}')"
->
-    View
-</a>
+        href="${load.folderLink}"
+        target="_blank"
+        class="client-link"
+    >
+        View
+    </a>
 </td>
 
 <td>
@@ -553,17 +596,46 @@ function viewPhotos(trailerNumber) {
     );
 }
 
-function generatePDF(loadId) {
+async function generatePDF(loadId) {
 
-    alert(
-        "PDF for " +
-        loadId
-    );
+    console.log("PDF clicked", loadId);
+    console.log({
+    action: "generatePdf",
+    loadId: loadId
+});
+    const response =
+        await fetch(
+            "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
+            {
+                method: "POST",
+
+                body: JSON.stringify({
+
+                    action: "generatePdf",
+
+                    loadId: loadId
+
+                })
+            }
+        );
+
+    const result =
+        await response.json();
+        console.log(result);
+
+    console.log(result);
+
+    if(result.folderUrl){
+
+        window.open(
+            result.folderUrl,
+            "_blank"
+        );
+
+    }
 }
 
-renderLoadList();
 
-loadData();
 
 document.getElementById("reportDate").value =
     new Date().toISOString().split("T")[0];
