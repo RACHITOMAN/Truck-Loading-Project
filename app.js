@@ -413,6 +413,7 @@ const result =
     await response.json();
 
 console.log(result);
+alert("Save completed");
 
 console.log(currentLoad);
 updateDashboard();
