@@ -1,69 +1,6 @@
-let loads = JSON.parse(
-    localStorage.getItem("truckTallyLoads")
-) || [
+let loads = [];
 
-    {
-
-        loadId: "TR001-090626",
-
-        trailerNumber: "TR001",
-
-        truckNumber: "7623",
-
-        loadingTimeIn: "2026-06-09T08:00",
-
-        loadingTimeOut: "2026-06-09T09:30",
-
-        customsSeal: "CS45821",
-
-        wbReceiptNo: "WB7754",
-
-        deliveryNoteNo: "DN4588",
-
-        wbTimeIn: "08:05",
-
-        wbTimeOut: "09:25",
-
-        tareWeight: 12500,
-
-        grossWeight: 38500,
-
-        remarks: "Normal load"
-
-    },
-
-    {
-
-        loadId: "TR002-090626",
-
-        trailerNumber: "TR002",
-
-        truckNumber: "5555",
-
-        loadingTimeIn: "2026-06-09T10:00",
-
-        loadingTimeOut: "2026-06-09T11:00",
-
-        customsSeal: "CS99999",
-
-        wbReceiptNo: "",
-
-        deliveryNoteNo: "DN5001",
-
-        wbTimeIn: "10:05",
-
-        wbTimeOut: "10:55",
-
-        tareWeight: 12000,
-
-        grossWeight: 36000,
-
-        remarks: "Awaiting WB Receipt"
-
-    }
-
-
-];
+let currentLoad = null;
 
 fetch(
     "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec"
@@ -217,11 +154,15 @@ function loadData() {
     document.getElementById("truckNumber").value =
          currentLoad.truckNumber;
 
-    document.getElementById("loadingTimeIn").value =
-         currentLoad.loadingTimeIn;
+  document.getElementById("loadingTimeIn").value =
+      currentLoad.loadingTimeIn
+          ? currentLoad.loadingTimeIn.slice(0,16)
+          : "";
 
-    document.getElementById("loadingTimeOut").value =
-         currentLoad.loadingTimeOut;
+  document.getElementById("loadingTimeOut").value =
+      currentLoad.loadingTimeOut
+          ? currentLoad.loadingTimeOut.slice(0,16)
+        : "";
 
     document.getElementById("customsSeal").value =
          currentLoad.customsSeal;
@@ -233,10 +174,14 @@ function loadData() {
          currentLoad.deliveryNoteNo;
 
     document.getElementById("wbTimeIn").value =
-         currentLoad.wbTimeIn;
+	    currentLoad.wbTimeIn
+	        ? currentLoad.wbTimeIn.slice(0,16)
+	        : "";
 
-    document.getElementById("wbTimeOut").value =
-         currentLoad.wbTimeOut;
+	document.getElementById("wbTimeOut").value =
+	    currentLoad.wbTimeOut
+	        ? currentLoad.wbTimeOut.slice(0,16)
+        : "";
 
     document.getElementById("tareWeight").value =
          currentLoad.tareWeight;
