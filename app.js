@@ -16,9 +16,15 @@ fetch(
         currentLoad = loads[0];
 
         renderLoadList();
+console.log("Before loadData");
 
-        loadData();
+loadData();
+
+console.log("After loadData");
+
 updateDashboard();
+
+console.log("After dashboard");
     }
 );
 
