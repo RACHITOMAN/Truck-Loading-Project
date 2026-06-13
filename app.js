@@ -1,11 +1,9 @@
-alert("APP JS LOADED");
+const API_URL = "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec";
 let loads = [];
 
 let currentLoad = null;
 
-fetch(
-    "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec"
-)
+fetch(API_URL)
 .then(
     response => response.json()
 )
@@ -236,18 +234,9 @@ async function loadPhotos() {
     if (!folderId)
         return;
 
-   const response =
-       await fetch(
-           "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
-           {
-               method:"POST",
-               body:JSON.stringify({
-                   action:"getPhotos",
-                   folderId:folderId
-               })
-           }
-       );
-
+const response = await fetch(
+    API_URL + "?action=getPhotos&folderId=" + encodeURIComponent(folderId)
+);
    const result =
     await response.json();
 
@@ -318,8 +307,7 @@ async function deletePhoto(fileId) {
     if (!confirm("Delete this photo?")) return;
 
     const response = await fetch(
-			    "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec?action=deletePhoto&fileId=" + fileId
-    );
+API_URL + "?action=deletePhoto&fileId=" + encodeURIComponent(fileId)    );
 
     const result = await response.json();
 
@@ -435,8 +423,7 @@ async function saveLoad() {
    );
 const response =
     await fetch(
-		"https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
-       {
+API_URL       {
            method: "POST",
 
            body: JSON.stringify({
@@ -490,7 +477,6 @@ const result =
     await response.json();
 
 console.log(result);
-alert("Save completed");
 
 console.log(currentLoad);
 updateDashboard();
@@ -728,29 +714,9 @@ function viewPhotos(trailerNumber) {
     );
 }
 
-async function generatePDF(loadId) {
-
-    console.log("PDF clicked", loadId);
-    console.log({
-    action: "generatePdf",
-    loadId: loadId
-});
-    const response =
-        await fetch(
-            "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
-            {
-                method: "POST",
-
-                body: JSON.stringify({
-
-                    action: "generatePdf",
-
-                    loadId: loadId
-
-                })
-            }
-        );
-
+function generatePDF(loadId) {
+    alert("PDF generation will be added later.");
+}
     const result =
         await response.json();
         console.log(result);
