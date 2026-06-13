@@ -355,6 +355,7 @@ async function deletePhoto(
 	    );
 
 }
+}
 window.deletePhoto = deletePhoto;
 
 function calculateNetWeight() {
