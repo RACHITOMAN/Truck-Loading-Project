@@ -641,9 +641,6 @@ async function generatePDF(loadId) {
 
     }
 }
-
-
-
 document.getElementById("reportDate").value =
     new Date().toISOString().split("T")[0];
 
@@ -664,35 +661,41 @@ document
     );
 function updateDashboard() {
 
+    let completedCount = 0;
+    let incompleteCount = 0;
+    let totalNetWeight = 0;
+    let trailerCount = 0;
+
     const selectedDate =
         document.getElementById(
             "reportDate"
         ).value;
-console.log("Selected:", selectedDate);
-
-loads.forEach(load => {
-    console.log(
-        "Load Date:",
-        load.wbTimeOut?.split("T")[0]
-    );
-});
-    let totalNetWeight = 0;
-    let trailerCount = 0;
 
     loads.forEach(load => {
 
-        if(
-            !load.wbTimeOut
-        ) return;
+        if (!load.wbTimeOut)
+            return;
 
         const loadDate =
             load.wbTimeOut
                 .split("T")[0];
 
-        if(
+        if (
             loadDate !==
             selectedDate
         ) return;
+
+        const complete =
+            load.deliveryNoteNo &&
+            load.wbReceiptNo &&
+            load.tareWeight &&
+            load.grossWeight;
+
+        if (complete) {
+            completedCount++;
+        } else {
+            incompleteCount++;
+        }
 
         const tare =
             Number(
@@ -720,7 +723,7 @@ loads.forEach(load => {
     document.getElementById(
         "trailerCount"
     ).textContent =
-        trailerCount;
+        completedCount;
 
     document.getElementById(
         "totalMT"
@@ -732,4 +735,14 @@ loads.forEach(load => {
         "totalTrailers"
     ).textContent =
         trailerCount;
+
+    const incompleteEl =
+        document.getElementById(
+            "incompleteTrucks"
+        );
+
+    if (incompleteEl) {
+        incompleteEl.textContent =
+            incompleteCount;
+    }
 }
