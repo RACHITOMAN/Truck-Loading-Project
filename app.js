@@ -699,8 +699,7 @@ document
     <a
         href="#"
         class="client-link"
-        onclick="viewClientPhotos('${load.folderLink}')"
-    >
+onclick="viewClientPhotos('${load.folderLink}', '${getDisplayLoadId(load)}')"    >
         View
     </a>
 </td>
@@ -727,8 +726,8 @@ function viewPhotos(trailerNumber) {
         trailerNumber
     );
 }
-async function viewClientPhotos(folderLink) {
-    const folderId =
+async function viewClientPhotos(folderLink, displayLoadId) {
+	const folderId =
         folderLink.match(/folders\/([^?]+)/)?.[1];
 
     if (!folderId) {
@@ -753,8 +752,8 @@ async function viewClientPhotos(folderLink) {
     galleryWindow.document.write(`
         <html>
             <head>
-                <title>Load Photos</title>
-                <style>
+<title>${displayLoadId}</title>
+<style>
                     body {
                         font-family: Arial, sans-serif;
                         margin: 20px;
@@ -780,8 +779,8 @@ async function viewClientPhotos(folderLink) {
                 </style>
             </head>
             <body>
-                <h2>Load Photos</h2>
-                <div class="gallery">
+<h2>${displayLoadId}</h2>
+<div class="gallery">
                     ${photos.map(photo => `
                         <img src="${photo.url}" alt="Load photo">
                     `).join("")}
