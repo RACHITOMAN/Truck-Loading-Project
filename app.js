@@ -664,18 +664,43 @@ document
     );
 function updateDashboard() {
 
+    const selectedDate =
+        document.getElementById(
+            "reportDate"
+        ).value;
+
     let totalNetWeight = 0;
+    let trailerCount = 0;
 
     loads.forEach(load => {
 
+        if(
+            !load.wbTimeOut
+        ) return;
+
+        const loadDate =
+            load.wbTimeOut
+                .split("T")[0];
+
+        if(
+            loadDate !==
+            selectedDate
+        ) return;
+
         const tare =
-            Number(load.tareWeight) || 0;
+            Number(
+                load.tareWeight
+            ) || 0;
 
         const gross =
-            Number(load.grossWeight) || 0;
+            Number(
+                load.grossWeight
+            ) || 0;
 
         totalNetWeight +=
             (gross - tare);
+
+        trailerCount++;
 
     });
 
@@ -688,7 +713,7 @@ function updateDashboard() {
     document.getElementById(
         "trailerCount"
     ).textContent =
-        loads.length;
+        trailerCount;
 
     document.getElementById(
         "totalMT"
@@ -699,5 +724,5 @@ function updateDashboard() {
     document.getElementById(
         "totalTrailers"
     ).textContent =
-        loads.length;
+        trailerCount;
 }
