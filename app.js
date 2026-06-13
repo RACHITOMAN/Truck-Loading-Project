@@ -318,14 +318,7 @@ async function deletePhoto(fileId) {
     if (!confirm("Delete this photo?")) return;
 
     const response = await fetch(
-        "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
-        {
-            method: "POST",
-            body: JSON.stringify({
-                action: "deletePhoto",
-                fileId: fileId
-            })
-        }
+			    "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec?action=deletePhoto&fileId=" + fileId
     );
 
     const result = await response.json();
