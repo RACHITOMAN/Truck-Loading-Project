@@ -336,21 +336,24 @@ async function deletePhoto(
         );
 
     const result =
-        await response.json();
+	    await response.json();
 
-    if (
-        result.success
-    ) {
+	console.log("Delete result:", result);
 
-        loadPhotos();
+	if (
+	    result.success
+	) {
 
-    } else {
+	    alert("Photo deleted");
 
-        alert(
-            "Delete failed"
-        );
+	    loadPhotos();
 
-    }
+	} else {
+
+	    alert(
+	        "Delete failed"
+	    );
+
 }
 window.deletePhoto = deletePhoto;
 
