@@ -235,7 +235,7 @@ async function loadPhotos() {
         return;
 
 const response = await fetch(
-    API_URL + "?action=getPhotos&folderId=" + encodeURIComponent(folderId)
+    API_URL, + "?action=getPhotos&folderId=" + encodeURIComponent(folderId)
 );
    const result =
     await response.json();
@@ -307,7 +307,7 @@ async function deletePhoto(fileId) {
     if (!confirm("Delete this photo?")) return;
 
     const response = await fetch(
-API_URL + "?action=deletePhoto&fileId=" + encodeURIComponent(fileId)    );
+API_URL, + "?action=deletePhoto&fileId=" + encodeURIComponent(fileId)    );
 
     const result = await response.json();
 
@@ -423,7 +423,7 @@ async function saveLoad() {
    );
 const response =
     await fetch(
-API_URL       {
+API_URL,       {
            method: "POST",
 
            body: JSON.stringify({
