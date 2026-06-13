@@ -154,6 +154,10 @@ function renderLoadList() {
 }
 
 function loadData() {
+	console.log(
+	    "Loading photos for",
+	    currentLoad.folderLink
+);
 
     document.getElementById("trailerNumber").value =
          currentLoad.trailerNumber;
@@ -212,8 +216,95 @@ document.getElementById("loadStatus").textContent =
     complete
         ? "🟢 Complete"
         : "🔴 Incomplete";
-        document.getElementById("loadSummary").textContent =
-    `Truck: ${currentLoad.truckNumber} • WB: ${currentLoad.wbReceiptNo} • DN: ${currentLoad.deliveryNoteNo}`;
+
+ document.getElementById("loadSummary").textContent =
+     `Truck: ${currentLoad.truckNumber} • WB: ${currentLoad.wbReceiptNo} • DN: ${currentLoad.deliveryNoteNo}`;
+
+ loadPhotos();
+}
+async function loadPhotos() {
+
+    if (
+        !currentLoad ||
+        !currentLoad.folderLink
+    ) return;
+
+    const folderId =
+        currentLoad.folderLink
+            .match(/folders\/([^?]+)/)?.[1];
+
+    if (!folderId)
+        return;
+
+   const response =
+       await fetch(
+           "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
+           {
+               method:"POST",
+               body:JSON.stringify({
+                   action:"getPhotos",
+                   folderId:folderId
+               })
+           }
+       );
+
+   const result =
+    await response.json();
+
+    const container =
+        document.getElementById(
+            "thumbnailContainer"
+        );
+
+    container.innerHTML = "";
+
+    result.photos.forEach(
+        photo => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className =
+                "photo-thumb";
+
+            div.innerHTML = `
+                <img
+                    src="${photo.url}"
+                    style="cursor:pointer"
+                >
+            `;
+
+            div.onclick =
+                () => {
+
+                    document
+                        .getElementById(
+                            "mainPhoto"
+                        )
+                        .src =
+                        photo.url;
+                };
+
+            container.appendChild(
+                div
+            );
+
+        }
+    );
+
+    if (
+        result.photos.length
+    ) {
+
+        document
+            .getElementById(
+                "mainPhoto"
+            )
+            .src =
+            result.photos[0].url;
+    }
 }
 function calculateNetWeight() {
 
