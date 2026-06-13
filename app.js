@@ -668,7 +668,14 @@ function updateDashboard() {
         document.getElementById(
             "reportDate"
         ).value;
+console.log("Selected:", selectedDate);
 
+loads.forEach(load => {
+    console.log(
+        "Load Date:",
+        load.wbTimeOut?.split("T")[0]
+    );
+});
     let totalNetWeight = 0;
     let trailerCount = 0;
 
