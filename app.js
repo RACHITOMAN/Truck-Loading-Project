@@ -270,12 +270,12 @@ async function loadPhotos() {
                 "photo-thumb";
 
             div.innerHTML = `
-			    <button
-			        class="delete-photo-btn"
-			        onclick="deletePhoto('${photo.id}')"
-			    >
-			        ❌
-			    </button>
+			   <button
+			       class="delete-photo-btn"
+			       onclick="event.stopPropagation(); deletePhoto('${photo.id}')"
+			   >
+			       ❌
+</button>
 
 			    <img
 			        src="${photo.url}"
@@ -311,6 +311,45 @@ async function loadPhotos() {
             )
             .src =
             result.photos[0].url;
+    }
+}
+async function deletePhoto(
+    fileId
+) {
+
+    if (
+        !confirm(
+            "Delete this photo?"
+        )
+    ) return;
+
+    const response =
+        await fetch(
+            "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
+            {
+                method:"POST",
+                body:JSON.stringify({
+                    action:"deletePhoto",
+                    fileId:fileId
+                })
+            }
+        );
+
+    const result =
+        await response.json();
+
+    if (
+        result.success
+    ) {
+
+        loadPhotos();
+
+    } else {
+
+        alert(
+            "Delete failed"
+        );
+
     }
 }
 function calculateNetWeight() {
