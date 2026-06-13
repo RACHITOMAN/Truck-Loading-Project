@@ -313,49 +313,38 @@ async function loadPhotos() {
             result.photos[0].url;
     }
 }
-async function deletePhoto(
-    fileId
-) {
+async function deletePhoto(fileId) {
 
-    if (
-        !confirm(
-            "Delete this photo?"
-        )
-    ) return;
+    if (!confirm("Delete this photo?")) return;
 
-    const response =
-        await fetch(
-            "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
-            {
-                method:"POST",
-                body:JSON.stringify({
-                    action:"deletePhoto",
-                    fileId:fileId
-                })
-            }
-        );
+    const response = await fetch(
+        "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                action: "deletePhoto",
+                fileId: fileId
+            })
+        }
+    );
 
-    const result =
-	    await response.json();
+    const result = await response.json();
 
-	console.log("Delete result:", result);
+    console.log("Delete result:", result);
 
-	if (
-	    result.success
-	) {
+    if (result.success) {
 
-	    alert("Photo deleted");
+        alert("Photo deleted");
 
-	    loadPhotos();
+        loadPhotos();
 
-	} else {
+    } else {
 
-	    alert(
-	        "Delete failed"
-	    );
+        alert("Delete failed");
 
+    }
 }
-}
+
 window.deletePhoto = deletePhoto;
 
 function calculateNetWeight() {
