@@ -661,17 +661,46 @@ document
     );
 function updateDashboard() {
 
-    let completedCount = 0;
-    let incompleteCount = 0;
-    let totalNetWeight = 0;
-    let trailerCount = 0;
-
     const selectedDate =
         document.getElementById(
             "reportDate"
         ).value;
 
+    let dailyMT = 0;
+    let completedCount = 0;
+    let incompleteCount = 0;
+
+    let totalMT = 0;
+    let totalTrucks = 0;
+
     loads.forEach(load => {
+
+        const tare =
+            Number(load.tareWeight) || 0;
+
+        const gross =
+            Number(load.grossWeight) || 0;
+
+        const netWeight =
+            gross - tare;
+
+        const complete =
+            load.deliveryNoteNo &&
+            load.wbReceiptNo &&
+            load.tareWeight &&
+            load.grossWeight;
+
+        // Lifetime totals
+
+        if (complete) {
+
+            totalMT += netWeight;
+
+            totalTrucks++;
+
+        }
+
+        // Daily totals
 
         if (!load.wbTimeOut)
             return;
@@ -685,39 +714,24 @@ function updateDashboard() {
             selectedDate
         ) return;
 
-        const complete =
-            load.deliveryNoteNo &&
-            load.wbReceiptNo &&
-            load.tareWeight &&
-            load.grossWeight;
-
         if (complete) {
+
             completedCount++;
+
+            dailyMT += netWeight;
+
         } else {
+
             incompleteCount++;
+
         }
-
-        const tare =
-            Number(
-                load.tareWeight
-            ) || 0;
-
-        const gross =
-            Number(
-                load.grossWeight
-            ) || 0;
-
-        totalNetWeight +=
-            (gross - tare);
-
-        trailerCount++;
 
     });
 
     document.getElementById(
         "loadedMT"
     ).textContent =
-        (totalNetWeight / 1000)
+        (dailyMT / 1000)
             .toFixed(1) + " MT";
 
     document.getElementById(
@@ -726,23 +740,18 @@ function updateDashboard() {
         completedCount;
 
     document.getElementById(
+        "incompleteTrucks"
+    ).textContent =
+        incompleteCount;
+
+    document.getElementById(
         "totalMT"
     ).textContent =
-        (totalNetWeight / 1000)
+        (totalMT / 1000)
             .toFixed(1) + " MT";
 
     document.getElementById(
         "totalTrailers"
     ).textContent =
-        trailerCount;
-
-    const incompleteEl =
-        document.getElementById(
-            "incompleteTrucks"
-        );
-
-    if (incompleteEl) {
-        incompleteEl.textContent =
-            incompleteCount;
-    }
+        totalTrucks;
 }
