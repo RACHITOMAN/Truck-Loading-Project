@@ -246,7 +246,7 @@ const response = await fetch(
         );
 
     container.innerHTML = "";
-
+document.getElementById("mainPhoto").removeAttribute("src");
     result.photos.forEach(
         photo => {
 
