@@ -270,11 +270,18 @@ async function loadPhotos() {
                 "photo-thumb";
 
             div.innerHTML = `
-                <img
-                    src="${photo.url}"
-                    style="cursor:pointer"
-                >
-            `;
+			    <button
+			        class="delete-photo-btn"
+			        onclick="deletePhoto('${photo.id}')"
+			    >
+			        ❌
+			    </button>
+
+			    <img
+			        src="${photo.url}"
+			        style="cursor:pointer"
+			    >
+`;
 
             div.onclick =
                 () => {
