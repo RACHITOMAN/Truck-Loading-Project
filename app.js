@@ -2,7 +2,15 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9q
 let loads = [];
 
 let currentLoad = null;
+function getDisplayLoadId(load) {
+    const datePart = String(load.loadId || "").split("-").pop();
 
+    if (!load.trailerNumber || !datePart) {
+        return load.loadId || "";
+    }
+
+    return load.trailerNumber + "-" + datePart;
+}
 fetch(API_URL)
 .then(
     response => response.json()
@@ -142,8 +150,8 @@ function renderLoadList() {
                     </div>
 
                     <div>
-                        ${load.loadId}
-                    </div>
+${getDisplayLoadId(load)}
+</div>
 
                 </div>
             `;
@@ -202,8 +210,8 @@ function loadData() {
          currentLoad.remarks;
 
         calculateNetWeight();
-        document.getElementById("loadTitle").textContent =
-    currentLoad.loadId;
+ document.getElementById("loadTitle").textContent =
+    getDisplayLoadId(currentLoad);
     const complete =
     currentLoad.deliveryNoteNo &&
     currentLoad.wbReceiptNo &&
@@ -222,6 +230,15 @@ document.getElementById("loadStatus").textContent =
 }
 async function loadPhotos() {
 
+    const container =
+        document.getElementById("thumbnailContainer");
+
+    const mainPhoto =
+        document.getElementById("mainPhoto");
+
+    container.innerHTML = "";
+    mainPhoto.removeAttribute("src");
+
     if (
         !currentLoad ||
         !currentLoad.folderLink
@@ -239,14 +256,6 @@ const response = await fetch(
 );
    const result =
     await response.json();
-
-    const container =
-        document.getElementById(
-            "thumbnailContainer"
-        );
-
-    container.innerHTML = "";
-document.getElementById("mainPhoto").removeAttribute("src");
     result.photos.forEach(
         photo => {
 
