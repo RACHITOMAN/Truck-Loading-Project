@@ -491,7 +491,7 @@ textarea:focus{
     display: grid;
 
     grid-template-columns:
-        repeat(4, 1fr);
+        repeat(5, 1fr);
 
     gap: 15px;
 
@@ -506,7 +506,7 @@ textarea:focus{
 
     border-radius: 10px;
 
-    padding: 18px;
+    padding: 14px;
 
     text-align: center;
 
@@ -527,7 +527,7 @@ textarea:focus{
 
 .kpi-value {
 
-    font-size: 28px;
+    font-size: 24px;
 
     font-weight: 700;
 
