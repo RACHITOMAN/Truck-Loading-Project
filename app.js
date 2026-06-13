@@ -303,26 +303,30 @@ const response = await fetch(
     }
 }
 async function deletePhoto(fileId) {
-
     if (!confirm("Delete this photo?")) return;
 
-    const response = await fetch(
-API_URL + "?action=deletePhoto&fileId=" + encodeURIComponent(fileId)    );
+    try {
+        document.body.style.cursor = "wait";
 
-    const result = await response.json();
+        const response = await fetch(
+            API_URL + "?action=deletePhoto&fileId=" + encodeURIComponent(fileId)
+        );
 
-    console.log("Delete result:", result);
+        const result = await response.json();
 
-    if (result.success) {
+        if (result.success) {
+            alert("Photo deleted");
+            await loadPhotos();
+        } else {
+            alert("Delete failed: " + (result.error || "Unknown error"));
+        }
 
-        alert("Photo deleted");
+    } catch (error) {
+        console.error("Delete photo error:", error);
+        alert("Delete failed. Please try again.");
 
-        loadPhotos();
-
-    } else {
-
-        alert("Delete failed");
-
+    } finally {
+        document.body.style.cursor = "";
     }
 }
 
