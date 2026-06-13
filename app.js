@@ -697,9 +697,9 @@ document
 
 <td>
     <a
-        href="${load.folderLink}"
-        target="_blank"
+        href="#"
         class="client-link"
+        onclick="viewClientPhotos('${load.folderLink}')"
     >
         View
     </a>
@@ -726,6 +726,71 @@ function viewPhotos(trailerNumber) {
         "Photos for " +
         trailerNumber
     );
+}
+async function viewClientPhotos(folderLink) {
+    const folderId =
+        folderLink.match(/folders\/([^?]+)/)?.[1];
+
+    if (!folderId) {
+        alert("No photo folder found for this load.");
+        return;
+    }
+
+    const response = await fetch(
+        API_URL + "?action=getPhotos&folderId=" + encodeURIComponent(folderId)
+    );
+
+    const result = await response.json();
+    const photos = result.photos || [];
+
+    if (!photos.length) {
+        alert("No photos found for this load.");
+        return;
+    }
+
+    const galleryWindow = window.open("", "_blank");
+
+    galleryWindow.document.write(`
+        <html>
+            <head>
+                <title>Load Photos</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 20px;
+                        background: #f4f6f8;
+                    }
+
+                    h2 {
+                        margin-bottom: 20px;
+                    }
+
+                    .gallery {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                        gap: 16px;
+                    }
+
+                    img {
+                        width: 100%;
+                        border-radius: 8px;
+                        background: white;
+                        box-shadow: 0 2px 8px rgba(0,0,0,.15);
+                    }
+                </style>
+            </head>
+            <body>
+                <h2>Load Photos</h2>
+                <div class="gallery">
+                    ${photos.map(photo => `
+                        <img src="${photo.url}" alt="Load photo">
+                    `).join("")}
+                </div>
+            </body>
+        </html>
+    `);
+
+    galleryWindow.document.close();
 }
 
 function generatePDF(loadId) {
