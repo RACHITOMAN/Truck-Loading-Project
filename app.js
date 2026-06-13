@@ -717,21 +717,7 @@ function viewPhotos(trailerNumber) {
 function generatePDF(loadId) {
     alert("PDF generation will be added later.");
 }
-    const result =
-        await response.json();
-        console.log(result);
 
-    console.log(result);
-
-    if(result.folderUrl){
-
-        window.open(
-            result.folderUrl,
-            "_blank"
-        );
-
-    }
-}
 document.getElementById("reportDate").value =
     new Date().toISOString().split("T")[0];
 
