@@ -585,10 +585,27 @@ textarea:focus{
     transition: all 0.2s ease;
 }
 
-/* Default tab buttons */
+
+
+
+/* =========================
+   TAB BUTTONS (ONLY TABS)
+   ========================= */
+
 .tab-button {
     background: #e5e7eb;
     color: #111827;
+
+    font-size: 15px;
+    padding: 12px 18px;
+
+    border-radius: 10px;
+    border: none;
+
+    cursor: pointer;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
 }
 
 /* Active tab */
@@ -597,28 +614,59 @@ textarea:focus{
     color: white;
 }
 
-/* Export button (primary action) */
+/* =========================
+   EXPORT BUTTON (PRIMARY ACTION)
+   ========================= */
+
 #exportExcelBtn {
-    background: #2563eb;
-    color: white;
+    background: #16a34a !important;
+    color: white !important;
+
+    font-size: 15px;
+    padding: 12px 18px;
+
+    border-radius: 10px;
+    border: none;
+
+    cursor: pointer;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+
+    margin-left: 10px;
 }
 
-/* Action buttons (Save, PDF, etc.) */
+/* =========================
+   ACTION BUTTONS (SECONDARY)
+   ========================= */
+
 .action-buttons button {
     background: #f3f4f6;
     color: #111827;
+
+    padding: 12px 18px;
+    border-radius: 8px;
+
+    border: none;
+    cursor: pointer;
+
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-/* Primary action button (Generate PDF) */
+/* Primary button inside actions */
 .action-buttons button.primary {
     background: #2563eb;
     color: white;
 }
 
-/* Hover effect for all */
+/* =========================
+   HOVER EFFECTS
+   ========================= */
+
 .tab-button:hover,
 .action-buttons button:hover,
 #exportExcelBtn:hover {
-    transform: scale(1.03);
+    transform: scale(1.05);
     opacity: 0.95;
 }
