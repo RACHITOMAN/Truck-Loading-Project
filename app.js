@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwlQ9QrLMH0rDXXWYx8HLp8DuSIMmGkGFjMDOuF4yD8ZC9vVDIj3CLPcb8Q66TO78wT/exec";let loads = [];
+const API_URL = "https://script.google.com/macros/s/AKfycbz53UE9i3fFHHixtZb6GplavpCEF4DqDZ5F_BgvJ2a5dmBqyK-MpYTd2-cfVrBLYBA/exec";let loads = [];
 
 let currentLoad = null;
 function getDisplayLoadId(load) {
