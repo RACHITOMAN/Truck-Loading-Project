@@ -1,5 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxmTis5lkk5-RzaPRTb7N9qFvhlexUJ6twnroUSZ4GobDLxlIt-NKhNdkR-JvGJXUSl/exec";
-let loads = [];
+const API_URL = "https://script.google.com/macros/s/AKfycbwlQ9QrLMH0rDXXWYx8HLp8DuSIMmGkGFjMDOuF4yD8ZC9vVDIj3CLPcb8Q66TO78wT/exec";let loads = [];
 
 let currentLoad = null;
 function getDisplayLoadId(load) {
@@ -931,21 +930,21 @@ function exportExcel() {
     fetch(API_URL + "?action=exportExcel")
         .then(res => res.json())
         .then(data => {
-            console.log("Response:", data);
+    console.log("Response:", data);
 
-            if (data.success) {
+    if (data.success) {
 
-                if (data.fileUrl && data.fileUrl.startsWith("http")) {
-                    window.open(data.fileUrl, "_blank");
-                } else {
-                    console.log("Invalid fileUrl:", data.fileUrl);
-                    alert("Export completed but file is not ready yet.");
-                }
+        if (data.fileUrl && data.fileUrl.startsWith("http")) {
+            window.open(data.fileUrl, "_blank");
+        } else {
+            console.log("Backend responded but fileUrl is not valid:", data.fileUrl);
+            alert("Export completed but file is not ready yet.");
+        }
 
-            } else {
-                alert("Export failed");
-            }
-        })
+    } else {
+        alert("Export failed");
+    }
+})
         .catch(err => {
             console.error("Export error:", err);
             alert("Error exporting Excel");
