@@ -573,23 +573,9 @@ textarea:focus{
     .photos{
         display:none;
     }
-    .tab-button,
-.action-buttons button,
-#exportExcelBtn {
-    font-size: 15px;
-    padding: 12px 18px;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.2s ease;
-}
-
-
-
-
+    }
 /* =========================
-   TAB BUTTONS (ONLY TABS)
+   TAB BUTTONS (Office / Client / Export)
    ========================= */
 
 .tab-button {
@@ -614,13 +600,10 @@ textarea:focus{
     color: white;
 }
 
-/* =========================
-   EXPORT BUTTON (PRIMARY ACTION)
-   ========================= */
-
+/* Export tab (3rd tab but special style) */
 #exportExcelBtn {
-    background: #16a34a !important;
-    color: white !important;
+    background: #16a34a;
+    color: white;
 
     font-size: 15px;
     padding: 12px 18px;
@@ -631,13 +614,21 @@ textarea:focus{
     cursor: pointer;
     font-weight: 600;
 
-    transition: all 0.2s ease;
-
     margin-left: 10px;
+
+    transition: all 0.2s ease;
+}
+
+/* Hover effects */
+.tab-button:hover,
+#exportExcelBtn:hover,
+.action-buttons button:hover {
+    transform: scale(1.05);
+    opacity: 0.95;
 }
 
 /* =========================
-   ACTION BUTTONS (SECONDARY)
+   ACTION BUTTONS (Save, PDF, etc.)
    ========================= */
 
 .action-buttons button {
@@ -645,28 +636,19 @@ textarea:focus{
     color: #111827;
 
     padding: 12px 18px;
+
     border-radius: 8px;
-
     border: none;
-    cursor: pointer;
 
+    cursor: pointer;
     font-weight: 600;
+
     transition: all 0.2s ease;
 }
 
-/* Primary button inside actions */
+/* Primary button (Generate PDF) */
 .action-buttons button.primary {
     background: #2563eb;
     color: white;
 }
-
-/* =========================
-   HOVER EFFECTS
-   ========================= */
-
-.tab-button:hover,
-.action-buttons button:hover,
-#exportExcelBtn:hover {
-    transform: scale(1.05);
-    opacity: 0.95;
-}
+    
