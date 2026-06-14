@@ -936,8 +936,8 @@ function exportExcel() {
             if (data.success && data.fileUrl) {
                 window.open(data.fileUrl, "_blank");
             } else {
-                alert("Export failed");
-            }
+alert("Export failed: " + (data.error || "Unknown error"));
+console.log("FULL RESPONSE:", data);            }
         })
         .catch(err => {
             console.error("Export error:", err);
