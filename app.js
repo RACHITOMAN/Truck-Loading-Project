@@ -931,22 +931,21 @@ function exportExcel() {
     fetch(API_URL + "?action=exportExcel")
         .then(res => res.json())
         .then(data => {
-    console.log("Response:", data);
+            console.log("Response:", data);
 
-    if (data.success) {
+            if (data.success) {
 
-        // ONLY open real URLs
-        if (data.fileUrl && data.fileUrl.startsWith("http")) {
-            window.open(data.fileUrl, "_blank");
-        } else {
-            alert("Export ran, but file URL is not valid yet.");
-            console.log("Invalid fileUrl:", data.fileUrl);
-        }
+                if (data.fileUrl && data.fileUrl.startsWith("http")) {
+                    window.open(data.fileUrl, "_blank");
+                } else {
+                    console.log("Invalid fileUrl:", data.fileUrl);
+                    alert("Export completed but file is not ready yet.");
+                }
 
-    } else {
-        alert("Export failed");
-    }
-})
+            } else {
+                alert("Export failed");
+            }
+        })
         .catch(err => {
             console.error("Export error:", err);
             alert("Error exporting Excel");
