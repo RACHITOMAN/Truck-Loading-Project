@@ -910,3 +910,41 @@ function updateDashboard() {
     ).textContent =
         totalTrucks;
 }
+window.addEventListener("load", function () {
+    const btn = document.getElementById("exportExcelBtn");
+
+    if (!btn) {
+        console.error("Export button not found");
+        return;
+    }
+
+    btn.addEventListener("click", exportExcel);
+});
+
+function exportExcel() {
+    console.log("Export Excel clicked");
+
+    const btn = document.getElementById("exportExcelBtn");
+    btn.disabled = true;
+    btn.innerText = "Exporting...";
+
+    fetch(API_URL + "?action=exportExcel")
+        .then(res => res.json())
+        .then(data => {
+            console.log("Response:", data);
+
+            if (data.success && data.fileUrl) {
+                window.open(data.fileUrl, "_blank");
+            } else {
+                alert("Export failed");
+            }
+        })
+        .catch(err => {
+            console.error("Export error:", err);
+            alert("Error exporting Excel");
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerText = "Export Excel";
+        });
+}
