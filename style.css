@@ -573,3 +573,52 @@ textarea:focus{
     .photos{
         display:none;
     }
+    .tab-button,
+.action-buttons button,
+#exportExcelBtn {
+    font-size: 15px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+/* Default tab buttons */
+.tab-button {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+/* Active tab */
+.tab-button.active-tab {
+    background: #2563eb;
+    color: white;
+}
+
+/* Export button (primary action) */
+#exportExcelBtn {
+    background: #2563eb;
+    color: white;
+}
+
+/* Action buttons (Save, PDF, etc.) */
+.action-buttons button {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+/* Primary action button (Generate PDF) */
+.action-buttons button.primary {
+    background: #2563eb;
+    color: white;
+}
+
+/* Hover effect for all */
+.tab-button:hover,
+.action-buttons button:hover,
+#exportExcelBtn:hover {
+    transform: scale(1.03);
+    opacity: 0.95;
+}
