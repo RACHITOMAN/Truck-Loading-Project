@@ -1,4 +1,5 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbz53UE9i3fFHHixtZb6GplavpCEF4DqDZ5F_BgvJ2a5dmBqyK-MpYTd2-cfVrBLYBA/exec";let loads = [];
+const API_URL = "https://script.google.com/macros/s/AKfycbz53UE9i3fFHHixtZb6GplavpCEF4DqDZ5F_BgvJ2a5dmBqyK-MpYTd2-cfVrBLYBA/exec"
+;let loads = [];
 
 let currentLoad = null;
 function getDisplayLoadId(load) {
@@ -927,30 +928,12 @@ function exportExcel() {
     btn.disabled = true;
     btn.innerText = "Exporting...";
 
-    fetch(API_URL + "?action=exportExcel")
-        .then(res => res.json())
-        .then(data => {
-    console.log("Response:", data);
+    // OPEN EXPORT (NO fetch, NO then, NO promise)
+    window.open(API_URL + "?action=exportExcel", "_blank");
 
-    if (data.success) {
-
-        if (data.fileUrl && data.fileUrl.startsWith("http")) {
-            window.open(data.fileUrl, "_blank");
-        } else {
-            console.log("Backend responded but fileUrl is not valid:", data.fileUrl);
-            alert("Export completed but file is not ready yet.");
-        }
-
-    } else {
-        alert("Export failed");
-    }
-})
-        .catch(err => {
-            console.error("Export error:", err);
-            alert("Error exporting Excel");
-        })
-        .finally(() => {
-            btn.disabled = false;
-            btn.innerText = "Export Excel";
-        });
+    // re-enable button after short delay
+    setTimeout(() => {
+        btn.disabled = false;
+        btn.innerText = "Export Excel";
+    }, 3000);
 }
