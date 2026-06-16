@@ -1,5 +1,5 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbz53UE9i3fFHHixtZb6GplavpCEF4DqDZ5F_BgvJ2a5dmBqyK-MpYTd2-cfVrBLYBA/exec";
-
+const WORKER_URL = "https://throbbing-pine-e30f.rachitmehra.workers.dev/";
+const API_URL = WORKER_URL;
 let loads = [];
 let currentLoad = null;
 
