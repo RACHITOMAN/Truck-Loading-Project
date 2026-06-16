@@ -1,28 +1,31 @@
 const WORKER_URL = "https://throbbing-pine-e30f.rachitmehra.workers.dev/";
-const API_URL = WORKER_URL;
-let loads = [];
+const API_URL    = WORKER_URL;
+
+let loads       = [];
 let currentLoad = null;
 
-// ── FIX 1: Read displayLoadId directly from the data ─────────
-// Old version reconstructed it from loadId which is a random string — wrong.
-// Now reads displayLoadId returned by getLoads() from column A of the Sheet.
+// ── DisplayID is now the single identifier ────────────────────
+// Reads directly from load.displayLoadId (col A of Sheet)
 function getDisplayLoadId(load) {
-    if (load.displayLoadId) return load.displayLoadId;
-    // Fallback for any legacy rows that may not have it
-    return load.trailerNumber
-        ? load.trailerNumber + "-" + (load.createdDate || "").slice(0, 10).replace(/-/g, "").slice(2)
-        : load.loadId || "";
+    return load.displayLoadId || load.trailerNumber || "";
+}
+
+// ── Rebuild displayLoadId if trailerNumber was edited ─────────
+// Keeps the original date part, replaces the trailer prefix
+function rebuildDisplayLoadId(originalDisplayLoadId, newTrailerNumber) {
+    const datePart = originalDisplayLoadId.split("-").pop(); // e.g. "160626"
+    return newTrailerNumber.toUpperCase() + "-" + datePart;
 }
 
 // ── Initial data load ─────────────────────────────────────────
 fetch(API_URL)
     .then(response => response.json())
     .then(data => {
-        loads = data;
+        loads       = data;
         currentLoad = loads[0];
         renderLoadList();
         loadData();
-        updateDashboard();  // ← only called once here now (FIX 2: removed duplicate at bottom)
+        updateDashboard();
     })
     .catch(err => {
         console.error("Failed to load data:", err);
@@ -99,8 +102,7 @@ function loadData() {
 
     calculateNetWeight();
 
-    const displayId = getDisplayLoadId(currentLoad);
-    document.getElementById("loadTitle").textContent = displayId;
+    document.getElementById("loadTitle").textContent = getDisplayLoadId(currentLoad);
 
     const complete =
         currentLoad.deliveryNoteNo &&
@@ -108,7 +110,9 @@ function loadData() {
         currentLoad.tareWeight &&
         currentLoad.grossWeight;
 
-    document.getElementById("loadStatus").textContent = complete ? "🟢 Complete" : "🔴 Incomplete";
+    document.getElementById("loadStatus").textContent =
+        complete ? "🟢 Complete" : "🔴 Incomplete";
+
     document.getElementById("loadSummary").textContent =
         `Truck: ${currentLoad.truckNumber} • WB: ${currentLoad.wbReceiptNo || "—"} • DN: ${currentLoad.deliveryNoteNo || "—"}`;
 
@@ -140,7 +144,8 @@ async function loadPhotos() {
             const div = document.createElement("div");
             div.className = "photo-thumb";
             div.innerHTML = `
-                <button class="delete-photo-btn" onclick="event.stopPropagation(); deletePhoto('${photo.id}')">❌</button>
+                <button class="delete-photo-btn"
+                    onclick="event.stopPropagation(); deletePhoto('${photo.id}')">❌</button>
                 <img src="${photo.url}" style="cursor:pointer">
             `;
             div.onclick = () => { document.getElementById("mainPhoto").src = photo.url; };
@@ -192,9 +197,15 @@ document.getElementById("grossWeight").addEventListener("input", calculateNetWei
 
 // ── Save load ─────────────────────────────────────────────────
 async function saveLoad() {
-    // Read form into currentLoad
-    currentLoad.trailerNumber  = document.getElementById("trailerNumber").value;
-    currentLoad.truckNumber    = document.getElementById("truckNumber").value;
+
+    // Capture the original displayLoadId BEFORE any edits — needed for lookup
+    const originalDisplayLoadId = currentLoad.displayLoadId;
+
+    // Read form values
+    const newTrailerNumber = document.getElementById("trailerNumber").value.trim().toUpperCase();
+
+    currentLoad.trailerNumber  = newTrailerNumber;
+    currentLoad.truckNumber    = document.getElementById("truckNumber").value.trim();
     currentLoad.loadingTimeIn  = document.getElementById("loadingTimeIn").value;
     currentLoad.loadingTimeOut = document.getElementById("loadingTimeOut").value;
     currentLoad.customsSeal    = document.getElementById("customsSeal").value;
@@ -206,36 +217,52 @@ async function saveLoad() {
     currentLoad.grossWeight    = document.getElementById("grossWeight").value;
     currentLoad.remarks        = document.getElementById("remarks").value;
 
-    // FIX 3: Removed localStorage.setItem — it was never read back, dead code
+    // If trailer number changed, rebuild the displayLoadId
+    const newDisplayLoadId = rebuildDisplayLoadId(originalDisplayLoadId, newTrailerNumber);
+    const trailerChanged   = newDisplayLoadId !== originalDisplayLoadId;
 
     try {
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                action:        "update",
-                loadId:        currentLoad.loadId,
-                trailerNumber: currentLoad.trailerNumber,
-                truckNumber:   currentLoad.truckNumber,
-                customsSeal:   currentLoad.customsSeal,
-                loadingTimeIn: currentLoad.loadingTimeIn,
-                loadingTimeOut:currentLoad.loadingTimeOut,
-                wbReceiptNo:   currentLoad.wbReceiptNo,
-                deliveryNoteNo:currentLoad.deliveryNoteNo,
-                wbTimeIn:      currentLoad.wbTimeIn,
-                wbTimeOut:     currentLoad.wbTimeOut,
-                tareWeight:    currentLoad.tareWeight,
-                grossWeight:   currentLoad.grossWeight,
-                remarks:       currentLoad.remarks
+                action:         "update",
+                displayLoadId:  originalDisplayLoadId,  // lookup key — original value
+                trailerNumber:  currentLoad.trailerNumber,
+                truckNumber:    currentLoad.truckNumber,
+                customsSeal:    currentLoad.customsSeal,
+                loadingTimeIn:  currentLoad.loadingTimeIn,
+                loadingTimeOut: currentLoad.loadingTimeOut,
+                wbReceiptNo:    currentLoad.wbReceiptNo,
+                deliveryNoteNo: currentLoad.deliveryNoteNo,
+                wbTimeIn:       currentLoad.wbTimeIn,
+                wbTimeOut:      currentLoad.wbTimeOut,
+                tareWeight:     currentLoad.tareWeight,
+                grossWeight:    currentLoad.grossWeight,
+                remarks:        currentLoad.remarks
             })
         });
 
         const result = await response.json();
 
         if (result.success) {
+            // ── Update local loads array with new displayLoadId ──
+            // This is the dashboard fix: keeps in-memory data in sync
+            // so dashboard, sidebar, and client table all show the correct ID
+            currentLoad.displayLoadId = result.displayLoadId || newDisplayLoadId;
+
+            if (trailerChanged) {
+                console.log(`DisplayID updated: ${originalDisplayLoadId} → ${currentLoad.displayLoadId}`);
+            }
+
             updateDashboard();
             renderLoadList();
+
+            // Update the title shown in office view
+            document.getElementById("loadTitle").textContent = getDisplayLoadId(currentLoad);
+
             alert("✅ Load saved.");
+
         } else {
             alert("Save failed: " + (result.error || "Unknown error"));
         }
@@ -260,8 +287,8 @@ function showOfficeView() {
         `"topbar topbar topbar"
          "sidebar details photos"`;
 
-    document.querySelector(".sidebar").style.display = "";
-    document.querySelector(".photos").style.display  = "flex";
+    document.querySelector(".sidebar").style.display  = "";
+    document.querySelector(".photos").style.display   = "flex";
     document.querySelector(".details").style.gridColumn = "";
 
     renderLoadList();
@@ -299,8 +326,9 @@ function renderClientTable() {
         body.innerHTML += `
 <tr>
     <td>${index + 1}</td>
-    <td>${load.trailerNumber || ""}</td>
-    <td>${load.truckNumber   || ""}</td>
+    <td>${getDisplayLoadId(load)}</td>
+    <td>${load.trailerNumber  || ""}</td>
+    <td>${load.truckNumber    || ""}</td>
     <td>${load.loadingTimeIn  ? new Date(load.loadingTimeIn).toLocaleString()  : ""}</td>
     <td>${load.loadingTimeOut ? new Date(load.loadingTimeOut).toLocaleString() : ""}</td>
     <td>${load.customsSeal    || ""}</td>
@@ -311,13 +339,15 @@ function renderClientTable() {
     <td>${tare}</td>
     <td>${gross}</td>
     <td>${net}</td>
-    <td><a href="#" class="client-link" onclick="viewClientPhotos('${load.folderLink}', '${getDisplayLoadId(load)}')">View</a></td>
-    <td><a href="#" class="client-link" onclick="generatePDF('${load.loadId}')">PDF</a></td>
+    <td><a href="#" class="client-link"
+        onclick="viewClientPhotos('${load.folderLink}', '${getDisplayLoadId(load)}')">View</a></td>
+    <td><a href="#" class="client-link"
+        onclick="generatePDF('${getDisplayLoadId(load)}')">PDF</a></td>
 </tr>`;
     });
 }
 
-// ── Client photo gallery (opens new tab) ─────────────────────
+// ── Client photo gallery ──────────────────────────────────────
 async function viewClientPhotos(folderLink, displayLoadId) {
     const folderId = folderLink.match(/folders\/([^?]+)/)?.[1];
     if (!folderId) { alert("No photo folder found for this load."); return; }
@@ -344,11 +374,7 @@ async function viewClientPhotos(folderLink, displayLoadId) {
                         grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
                         gap: 16px;
                     }
-                    img {
-                        width: 100%;
-                        border-radius: 8px;
-                        box-shadow: 0 2px 8px rgba(0,0,0,.15);
-                    }
+                    img { width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
                 </style>
             </head>
             <body>
@@ -368,7 +394,7 @@ async function viewClientPhotos(folderLink, displayLoadId) {
 }
 
 // Stub — to be built
-function generatePDF(loadId) {
+function generatePDF(displayLoadId) {
     alert("PDF generation coming soon.");
 }
 
@@ -408,17 +434,15 @@ function updateDashboard() {
         }
     });
 
-    document.getElementById("loadedMT").textContent       = (dailyMT / 1000).toFixed(1) + " MT";
-    document.getElementById("trailerCount").textContent   = completedCount;
+    document.getElementById("loadedMT").textContent         = (dailyMT / 1000).toFixed(1) + " MT";
+    document.getElementById("trailerCount").textContent     = completedCount;
     document.getElementById("incompleteTrucks").textContent = incompleteCount;
-    document.getElementById("totalMT").textContent        = (totalMT / 1000).toFixed(1) + " MT";
-    document.getElementById("totalTrailers").textContent  = totalTrucks;
+    document.getElementById("totalMT").textContent          = (totalMT / 1000).toFixed(1) + " MT";
+    document.getElementById("totalTrailers").textContent    = totalTrucks;
 }
 
 // ── Date picker default + listener ───────────────────────────
 document.getElementById("reportDate").value = new Date().toISOString().split("T")[0];
-// FIX 2: updateDashboard() NOT called here — runs after data loads above instead
-
 document.getElementById("reportDate").addEventListener("change", updateDashboard);
 document.getElementById("searchInput").addEventListener("input", filterLoads);
 

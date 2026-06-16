@@ -1,437 +1,254 @@
+<!DOCTYPE html>
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Truck Tally Office</title>
-<link rel="stylesheet" href="style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Truck Tally Site Capture</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.1);
+    }
+    h1 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 20px;
+    }
+    .field { margin-bottom: 20px; }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    input[type="file"] { width: 100%; font-size: 15px; }
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:disabled { background: #93b4f5; cursor: not-allowed; }
+    button:hover:not(:disabled) { opacity: .9; }
+    #photoCount { margin-top: 8px; font-size: 14px; color: #555; }
+    #progressBar {
+      display: none;
+      margin-top: 12px;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    #progressFill {
+      height: 100%;
+      background: #2563eb;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    #statusMsg {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #374151;
+      text-align: center;
+      min-height: 20px;
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="app">
+<div class="container">
+  <h1>Truck Tally Site Capture</h1>
 
-    <header class="topbar">
+  <div class="field">
+    <label>Trailer Number</label>
+    <input type="text" id="trailerNumber" placeholder="e.g. TR001">
+  </div>
 
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="Search Trailer, Truck, DN, WB Receipt, Date..."
-        >
+  <div class="field">
+    <label>Truck Number</label>
+    <input type="text" id="truckNumber" placeholder="e.g. 7623">
+  </div>
 
-    </header>
+  <div class="field">
+    <label>Photos (max 15)</label>
+    <input type="file" id="photos" multiple accept=".jpg,.jpeg,.png">
+    <div id="photoCount">No photos selected</div>
+  </div>
 
-    <aside class="sidebar">
-
-        <div class="sidebar-title">
-            Loads
-        </div>
-
-        <div id="loadList">
+  <button id="submitBtn">Submit Load</button>
+  <div id="progressBar"><div id="progressFill"></div></div>
+  <div id="statusMsg"></div>
 </div>
 
-    </aside>
-
-    <main class="details">
- <div class="view-tabs">
-
-    <button
-        id="officeTab"
-        class="tab-button active-tab"
-    >
-        Office View
-    </button>
-
-    <button
-        id="clientTab"
-        class="tab-button"
-    >
-        Client View
-    </button>
-    <button id="exportExcelBtn" class="tab-button">
-    Export Excel
-</button>
-
-</div>
-<div class="dashboard-date">
-
-    <label for="reportDate">
-        Report Date
-    </label>
-
-    <input
-        type="date"
-        id="reportDate"
-    >
-
-</div>
-
-<div class="dashboard-bar">
-
-    <div class="kpi-card">
-
-        <div class="kpi-title">
-            Loaded MT
-        </div>
-
-        <div
-            class="kpi-value"
-            id="loadedMT"
-        >
-            260 MT
-        </div>
-            </div>
-
-
-<div class="kpi-card">
-
-    <div class="kpi-title">
-        Completed Trucks
-    </div>
-
-    <div
-        class="kpi-value"
-        id="trailerCount"
-    >
-        0
-    </div>
-
-</div>
-
-    <div class="kpi-card">
-
-        <div class="kpi-title">
-Total MT Loaded
-</div>
-
-        <div
-            class="kpi-value"
-id="totalMT"
->
-            12,850 MT
-        </div>
-
-    </div>
-
-<div class="kpi-card">
-
-    <div class="kpi-title">
-        Total Trucks Loaded
-    </div>
-
-    <div
-        class="kpi-value"
-        id="totalTrailers"
-    >
-        0
-    </div>
-
-</div>
-<div class="kpi-card">
-
-       <div class="kpi-title">
-Incomplete Loads
-</div>
-
-       <div
-           class="kpi-value"
-           id="incompleteTrucks"
-       >
-           0
-       </div>
-
-</div>
-
-</div>
-<div
-    id="clientView"
-    style="display:none;"
->
-
-    <table class="client-table">
-
-        <thead>
-
-            <tr>
-
-                <th>No</th>
-
-                <th>Trailer No</th>
-
-<th>Truck No</th>
-
-<th>Loading In</th>
-
-<th>Loading Out</th>
-
-<th>Customs Seal</th>
-
-<th>WB Receipt No</th>
-
-<th>Delivery Note No</th>
-
-<th>WB In</th>
-
-<th>WB Out</th>
-
-<th>Tare Weight</th>
-
-<th>Gross Weight</th>
-
-<th>Net Weight</th>
-<th>Photos</th>
-
-<th>PDF</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody id="clientTableBody">
-
-        </tbody>
-
-    </table>
-
-</div>
-<div id="officeView">
-<div class="load-header">
-
-    <div>
-
-        <h2 id="loadTitle">
-            TR001-090626
-        </h2>
-
-        <div id="loadStatus">
-            🟢 Complete
-        </div>
-
-        <div id="loadSummary">
-            Truck: 7623 • WB: WB7754 • DN: DN4588
-        </div>
-
-    </div>
-
-</div>
-      <form id="loadForm">
-
-    <div class="section-card trailer-card">
-
-    <h3 class="section-title">
-        Trailer Information
-    </h3>
-
-    <div class="form-grid">
-
-        <div class="field-group">
-            <label for="trailerNumber">
-                Trailer Number
-            </label>
-
-            <input id="trailerNumber">
-        </div>
-
-        <div class="field-group">
-            <label for="truckNumber">
-                Truck Number
-            </label>
-
-            <input id="truckNumber">
-        </div>
-
-        <div class="field-group">
-            <label for="customsSeal">
-                Customs Seal
-            </label>
-
-            <input id="customsSeal">
-        </div>
-
-    </div>
-
-</div>
-
-    <div class="section-card loading-card">
-
-    <h3 class="section-title">
-        Loading Information
-    </h3>
-
-    <div class="form-grid">
-
-        <div class="field-group">
-            <label for="loadingTimeIn">
-                Loading Time In
-            </label>
-
-            <input id="loadingTimeIn" type="datetime-local">
-        </div>
-
-        <div class="field-group">
-            <label for="loadingTimeOut">
-                Loading Time Out
-            </label>
-
-            <input id="loadingTimeOut" type="datetime-local">
-        </div>
-
-        <div class="field-group">
-            <label for="wbTimeIn">
-                WB Time In
-            </label>
-
-            <input
-    id="wbTimeIn"
-    type="datetime-local"
->
-        </div>
-
-        <div class="field-group">
-            <label for="wbTimeOut">
-                WB Time Out
-            </label>
-
-            <input
-    id="wbTimeOut"
-    type="datetime-local"
->
-        </div>
-
-    </div>
-
-</div>
-
-    <div class="section-card documents-card">
-
-<h3 class="section-title">
-    Documents
-</h3>
-
-<div class="form-grid">
-
-    <div class="field-group">
-        <label for="wbReceiptNo">
-            WB Receipt No
-        </label>
-
-        <input id="wbReceiptNo">
-    </div>
-
-    <div class="field-group">
-        <label for="deliveryNoteNo">
-            Delivery Note No
-        </label>
-
-        <input id="deliveryNoteNo">
-    </div>
-
-</div>
-
-</div>
-
-<div class="section-card weight-card">
-
-<h3 class="section-title">
-    Weight Information
-</h3>
-
-<div class="form-grid">
-
-    <div class="field-group">
-        <label for="tareWeight">
-            Tare Weight
-        </label>
-
-        <input id="tareWeight" type="number">
-    </div>
-
-    <div class="field-group">
-        <label for="grossWeight">
-            Gross Weight
-        </label>
-
-        <input id="grossWeight" type="number">
-    </div>
-
-    <div class="field-group">
-        <label for="netWeight">
-            Net Weight
-        </label>
-
-        <input id="netWeight" readonly>
-    </div>
-
-</div>
-
-
-</div>
-
-<div class="section-card">
-
-    <h3 class="section-title">
-        Remarks
-    </h3>
-
-    <textarea
-        id="remarks"
-        rows="6"
-        placeholder="Enter remarks..."
-    ></textarea>
-
-</div>
-
-</form>
-        <div class="action-buttons">
-
-            <button
-    type="button"
-    id="saveBtn"
->
-    Save
-</button>
-
-            <button
-                type="button"
-                class="primary"
-            >
-                Generate PDF
-            </button>
-
-            <button type="button">
-                Open PDF
-            </button>
-
-            <button type="button">
-                Open Folder
-            </button>
-</div>
-        </div>
-
-    </main>
-
-    <section class="photos">
-
-        <div class="preview">
-
-            <img
-                id="mainPhoto"
-src=""
-alt="Preview"
-            >
-
-        </div>
-
-        <div
-		    class="thumbnails"
-		    id="thumbnailContainer"
-		>
-</div>
-
-    </section>
-
-</div>
-
-<script src="app.js"></script>
+<script>
+
+const WORKER_URL = "https://throbbing-pine-e30f.rachitmehra.workers.dev/";
+
+// ── Photo count display ──────────────────────────────────────
+document.getElementById("photos").addEventListener("change", function () {
+  const count = this.files.length;
+  document.getElementById("photoCount").textContent =
+    count === 0 ? "No photos selected" : count + " photo(s) selected";
+});
+
+// ── Generate DisplayID = TrailerNumber-DDMMYY ────────────────
+// This is now the ONLY identifier — no random loadId needed
+function generateDisplayId(trailerNumber) {
+  const d  = new Date();
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yy = String(d.getFullYear()).slice(-2);
+  return `${trailerNumber.toUpperCase()}-${dd}${mm}${yy}`;
+}
+
+function setStatus(msg) {
+  document.getElementById("statusMsg").textContent = msg;
+}
+
+function setProgress(pct) {
+  document.getElementById("progressFill").style.width = pct + "%";
+}
+
+// ── Image compression ────────────────────────────────────────
+async function compressImage(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const img = new Image();
+      img.onload = function () {
+        const canvas = document.createElement("canvas");
+        let width  = img.width;
+        let height = img.height;
+        const maxWidth = 1600;
+        if (width > maxWidth) {
+          height = height * (maxWidth / width);
+          width  = maxWidth;
+        }
+        canvas.width  = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => resolve(blob), "image/jpeg", 0.7);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function blobToBase64(blob) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = function () { resolve(reader.result.split(",")[1]); };
+    reader.readAsDataURL(blob);
+  });
+}
+
+// ── Submit ───────────────────────────────────────────────────
+document.getElementById("submitBtn").addEventListener("click", async function () {
+
+  const trailerNumber = document.getElementById("trailerNumber").value.trim().toUpperCase();
+  const truckNumber   = document.getElementById("truckNumber").value.trim();
+  const photos        = document.getElementById("photos").files;
+
+  if (trailerNumber.length < 2) { alert("Enter a valid trailer number."); return; }
+  if (!truckNumber)              { alert("Enter a truck number."); return; }
+  if (photos.length === 0)       { alert("Please select at least one photo."); return; }
+  if (photos.length > 15) {
+    alert("Maximum 15 photos allowed. Please remove " + (photos.length - 15) + " photo(s).");
+    return;
+  }
+
+  // DisplayID is now the single identifier — no random loadId
+  const displayLoadId = generateDisplayId(trailerNumber);
+
+  const btn = document.getElementById("submitBtn");
+  btn.disabled    = true;
+  btn.textContent = "Saving...";
+  document.getElementById("progressBar").style.display = "block";
+  setProgress(0);
+  setStatus("Compressing photos...");
+
+  try {
+    const photoData = [];
+    for (let i = 0; i < photos.length; i++) {
+      setStatus(`Compressing photo ${i + 1} of ${photos.length}...`);
+      setProgress(Math.round(((i + 1) / photos.length) * 50));
+      const compressed = await compressImage(photos[i]);
+      const base64     = await blobToBase64(compressed);
+      photoData.push({ fileName: photos[i].name, data: base64 });
+    }
+
+    setStatus("Uploading to server...");
+    setProgress(60);
+
+    const response = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action:        "createLoad",
+        trailerNumber: trailerNumber,
+        truckNumber:   truckNumber,
+        displayLoadId: displayLoadId,   // ← single identifier, no loadId
+        photoCount:    photos.length,
+        photos:        photoData
+      })
+    });
+
+    setProgress(90);
+    const result = await response.json();
+
+    if (result.success) {
+      setProgress(100);
+      setStatus("✅ " + displayLoadId + " saved — " + result.photosUploaded + " photo(s) uploaded.");
+      alert("✅ " + displayLoadId + " saved successfully.");
+      document.getElementById("trailerNumber").value = "";
+      document.getElementById("truckNumber").value   = "";
+      document.getElementById("photos").value        = "";
+      document.getElementById("photoCount").textContent = "No photos selected";
+
+    } else if (result.duplicate) {
+      setStatus("⚠️ Duplicate: " + displayLoadId + " already exists.");
+      alert("⚠️ This trailer was already submitted today (" + displayLoadId + ").\nContact office if this is a second load.");
+
+    } else {
+      setStatus("❌ Error: " + (result.error || "Unknown error"));
+      alert("Error saving load: " + (result.error || "Unknown error"));
+    }
+
+  } catch (err) {
+    console.error(err);
+    setStatus("❌ Network error — please try again.");
+    alert("Network error. Please check your connection and try again.");
+  }
+
+  btn.disabled    = false;
+  btn.textContent = "Submit Load";
+  setTimeout(() => {
+    document.getElementById("progressBar").style.display = "none";
+    setProgress(0);
+  }, 3000);
+});
+
+</script>
 </body>
 </html>
