@@ -10,11 +10,7 @@
 <div class="app">
 
     <header class="topbar">
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="Search Trailer, Truck, DN, WB Receipt, Date..."
-        >
+        <input type="text" id="searchInput" placeholder="Search Trailer, Truck, DN, WB Receipt, Date...">
     </header>
 
     <aside class="sidebar">
@@ -35,38 +31,33 @@
         </div>
 
         <div class="dashboard-bar">
-
             <div class="kpi-card">
                 <div class="kpi-title">Loaded MT</div>
                 <div class="kpi-value" id="loadedMT">0 MT</div>
             </div>
-
             <div class="kpi-card">
                 <div class="kpi-title">Completed Trucks</div>
                 <div class="kpi-value" id="trailerCount">0</div>
             </div>
-
             <div class="kpi-card">
                 <div class="kpi-title">Total MT Loaded</div>
                 <div class="kpi-value" id="totalMT">0 MT</div>
             </div>
-
             <div class="kpi-card">
                 <div class="kpi-title">Total Trucks Loaded</div>
                 <div class="kpi-value" id="totalTrailers">0</div>
             </div>
-
             <div class="kpi-card">
                 <div class="kpi-title">Incomplete Loads</div>
                 <div class="kpi-value" id="incompleteTrucks">0</div>
             </div>
-
         </div>
 
-        <!-- ── Client View ───────────────────────────────────── -->
+        <!-- CLIENT VIEW -->
+        <!-- Fix 1: Load ID column removed -->
+        <!-- Fix 2: PDF column removed -->
         <div id="clientView" style="display:none;">
 
-            <!-- Export button sits above the table -->
             <div style="margin-bottom:12px;">
                 <button type="button" id="exportExcelBtn">Export Excel</button>
             </div>
@@ -75,9 +66,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Load ID</th>        <!-- DisplayID -->
                         <th>Trailer No</th>
-                        <th>Truck No</th>
                         <th>Loading In</th>
                         <th>Loading Out</th>
                         <th>Customs Seal</th>
@@ -89,7 +78,6 @@
                         <th>Gross Weight</th>
                         <th>Net Weight</th>
                         <th>Photos</th>
-                        <th>PDF</th>
                     </tr>
                 </thead>
                 <tbody id="clientTableBody"></tbody>
@@ -97,7 +85,7 @@
 
         </div>
 
-        <!-- ── Office View ───────────────────────────────────── -->
+        <!-- OFFICE VIEW -->
         <div id="officeView">
 
             <div class="load-header">
@@ -113,88 +101,72 @@
                 <div class="section-card trailer-card">
                     <h3 class="section-title">Trailer Information</h3>
                     <div class="form-grid">
-
                         <div class="field-group">
                             <label for="trailerNumber">Trailer Number</label>
                             <input id="trailerNumber">
                         </div>
-
                         <div class="field-group">
                             <label for="truckNumber">Truck Number</label>
                             <input id="truckNumber">
                         </div>
-
                         <div class="field-group">
                             <label for="customsSeal">Customs Seal</label>
                             <input id="customsSeal">
                         </div>
-
                     </div>
                 </div>
 
                 <div class="section-card loading-card">
                     <h3 class="section-title">Loading Information</h3>
                     <div class="form-grid">
-
                         <div class="field-group">
                             <label for="loadingTimeIn">Loading Time In</label>
                             <input id="loadingTimeIn" type="datetime-local">
                         </div>
-
                         <div class="field-group">
                             <label for="loadingTimeOut">Loading Time Out</label>
                             <input id="loadingTimeOut" type="datetime-local">
                         </div>
-
                         <div class="field-group">
                             <label for="wbTimeIn">WB Time In</label>
                             <input id="wbTimeIn" type="datetime-local">
                         </div>
-
                         <div class="field-group">
                             <label for="wbTimeOut">WB Time Out</label>
                             <input id="wbTimeOut" type="datetime-local">
                         </div>
-
                     </div>
                 </div>
 
                 <div class="section-card documents-card">
                     <h3 class="section-title">Documents</h3>
                     <div class="form-grid">
-
                         <div class="field-group">
                             <label for="wbReceiptNo">WB Receipt No</label>
                             <input id="wbReceiptNo">
                         </div>
-
                         <div class="field-group">
                             <label for="deliveryNoteNo">Delivery Note No</label>
                             <input id="deliveryNoteNo">
                         </div>
-
                     </div>
                 </div>
 
                 <div class="section-card weight-card">
                     <h3 class="section-title">Weight Information</h3>
                     <div class="form-grid">
-
                         <div class="field-group">
                             <label for="tareWeight">Tare Weight</label>
                             <input id="tareWeight" type="number">
                         </div>
-
                         <div class="field-group">
                             <label for="grossWeight">Gross Weight</label>
                             <input id="grossWeight" type="number">
                         </div>
-
                         <div class="field-group">
                             <label for="netWeight">Net Weight</label>
                             <input id="netWeight" readonly>
                         </div>
-
                     </div>
                 </div>
 
@@ -207,9 +179,9 @@
 
             <div class="action-buttons">
                 <button type="button" id="saveBtn">Save</button>
-                <button type="button" class="primary">Generate PDF</button>
-                <button type="button">Open PDF</button>
-                <button type="button">Open Folder</button>
+                
+                
+                <button type="button" id="openFolderBtn">Open Folder</button>
             </div>
 
         </div>
@@ -217,13 +189,10 @@
     </main>
 
     <section class="photos">
-
         <div class="preview">
             <img id="mainPhoto" src="" alt="Preview">
         </div>
-
         <div class="thumbnails" id="thumbnailContainer"></div>
-
     </section>
 
 </div>
