@@ -3,10 +3,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Truck Tally Office</title>
 <link rel="stylesheet" href="style.css">
+<!-- SheetJS for client-side Excel export — no Google login needed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 
 <body>
-
 <div class="app">
 
     <header class="topbar">
@@ -54,12 +55,11 @@
         </div>
 
         <!-- CLIENT VIEW -->
-        <!-- Fix 1: Load ID column removed -->
-        <!-- Fix 2: PDF column removed -->
         <div id="clientView" style="display:none;">
 
-            <div style="margin-bottom:12px;">
-                <button type="button" id="exportExcelBtn">Export Excel</button>
+            <div style="margin-bottom:12px; display:flex; gap:10px;">
+                <button type="button" id="exportDailyBtn">⬇ Export Daily Report</button>
+                <button type="button" id="exportFullBtn">⬇ Export Full Report</button>
             </div>
 
             <table class="client-table">
@@ -179,8 +179,6 @@
 
             <div class="action-buttons">
                 <button type="button" id="saveBtn">Save</button>
-                
-                
                 <button type="button" id="openFolderBtn">Open Folder</button>
             </div>
 
