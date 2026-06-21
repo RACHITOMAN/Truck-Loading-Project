@@ -448,7 +448,17 @@ function generateExcel(filteredLoads, filename, sheetDate) {
     ];
 
     XLSX.utils.book_append_sheet(wb, ws, sheetDate);
-    XLSX.writeFile(wb, filename);
+
+    // Blob URL download — works on both desktop and mobile
+    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const blob  = new Blob([wbout], { type: "application/octet-stream" });
+    const url   = URL.createObjectURL(blob);
+    const a     = document.createElement("a");
+    a.href      = url;
+    a.download  = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
 }
 
 // Export Daily — only loads matching the selected report date
